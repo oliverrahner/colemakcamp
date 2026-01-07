@@ -1,0 +1,33 @@
+{
+  "name": "colemakcamp",
+  "version": "1.0.0",
+  "description": "A fork of Colemak Club that overhauls the entire experience. Brings support for custom themes and a wider range of display sizes.",
+  "private": true,
+  "scripts": {
+    "build": "npm-run-all clean build:*",
+    "build:sass": "sass styles/:styles/ --no-source-map",
+    "build:css": "npm run minify:css",
+    "build:js": "npm run minify:js",
+    "minify:css": "cleancss -o styles/cascadiacode.min.css styles/cascadiacode.css && cleancss -o styles/fontasm.min.css styles/fontasm.css && cleancss -o styles/radiocanada.min.css styles/radiocanada.css && cleancss -o styles/main.min.css styles/main.css",
+    "minify:js": "terser scripts/app.js -o scripts/app.min.js -c -m && terser scripts/camp-calls.js -o scripts/camp-calls.min.js -c -m && terser scripts/fake-input.js -o scripts/fake-input.min.js -c -m && terser scripts/keyboard-divs.js -o scripts/keyboard-divs.min.js -c -m && terser scripts/layout-info.js -o scripts/layout-info.min.js -c -m && terser scripts/libconfig.js -o scripts/libconfig.min.js -c -m && terser scripts/new-key.js -o scripts/new-key.min.js -c -m && terser scripts/theme-stuff-re.js -o scripts/theme-stuff-re.min.js -c -m && terser scripts/word-list.js -o scripts/word-list.min.js -c -m && terser lib/popper.js -o lib/popper.min.js -c -m && terser lib/tippy.js -o lib/tippy.min.js -c -m",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:sass": "sass styles/:styles/ --no-source-map --watch",
+    "watch:css": "chokidar 'styles/*.css' '!styles/*.min.css' -c 'npm run minify:css'",
+    "watch:js": "chokidar 'scripts/*.js' 'lib/*.js' '!**/*.min.js' -c 'npm run minify:js'",
+    "clean": "echo 'Build output will be overwritten'",
+    "dev": "npm run watch"
+  },
+  "devDependencies": {
+    "sass": "^1.83.4",
+    "terser": "^5.37.0",
+    "clean-css-cli": "^5.6.3",
+    "npm-run-all": "^4.1.5",
+    "chokidar-cli": "^3.0.0"
+  },
+  "keywords": [
+    "colemak",
+    "typing",
+    "trainer"
+  ],
+  "license": "AGPL-3.0-only"
+}

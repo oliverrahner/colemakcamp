@@ -20,6 +20,47 @@ The following features are new in Colemak Camp:
 - Custom themes.
 - Sharing and loading custom themes via links.
 
+## Build Toolchain
+
+### Setup
+
+Install dependencies:
+```bash
+npm install
+```
+
+### Available Scripts
+
+#### Production Build
+```bash
+npm run build
+```
+This will:
+1. Compile all SCSS files to CSS
+2. Minify all CSS files
+3. Minify all JavaScript files
+
+#### Development Mode
+```bash
+npm run dev
+# or
+npm run watch
+```
+This will watch for changes in SCSS, CSS, and JS files and automatically rebuild them.
+
+#### Individual Tasks
+- `npm run build:sass` - Compile SCSS to CSS
+- `npm run minify:css` - Minify all CSS files
+- `npm run minify:js` - Minify all JavaScript files
+
+### Tools Used
+
+- **sass**: SCSS compilation
+- **terser**: JavaScript minification with compression
+- **clean-css-cli**: CSS minification
+- **npm-run-all**: Run multiple npm scripts in parallel or sequence
+- **chokidar-cli**: File watching for development mode
+
 ## License
 This project is under the **[GNU Affero General Public License v3.0 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.en.html)**, which is the same as Colemak Club and Colemak Academy, as seen in this [issue](https://github.com/Nemcorp/layoutacademy/issues/2).
 

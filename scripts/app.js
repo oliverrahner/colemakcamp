@@ -43,11 +43,13 @@ let promptOffset = 0,
     correctAnswer, // string representation of the current correct word
     letterIndex = 0, // Keeps track of where in a word the user is; Increment with every keystroke except ' ', return, and backspace; Decrement for backspace, and reset for the other 2
     onlyLower = !localStorage.getItem('onlyLower') || localStorage.getItem('onlyLower') === 'true', // If only lower is true, include only words without capital letters
+    nonLatin = !localStorage.getItem('nonLatin') || localStorage.getItem('nonLatin') === 'true', // If nonLatin is true, include words with non-latin letters (diacritics, german ß...)
     answerString = '', // A string representation of the words for the current test. After a correct word is typed, it is removed from the beginning of answerString. By the end of the test, there should be no words in answerString
     keyboardMap = layoutMaps['colemak'],
     letterDictionary = levelDictionaries['colemak'],
     currentLayout = localStorage.getItem('currentLayout') || 'colemak',
     currentKeyboard = localStorage.getItem('currentKeyboard') || 'ansi',
+    currentLanguage = localStorage.getItem('currentLanguage') || 'en',
     shiftDown = false, // tracks whether the shift key is currently being pushed
     fullSentenceMode = false, // if true, all prompts will be replace with sentences
     fullSentenceModeEnabled = localStorage.getItem('fullSentenceModeEnabled') === 'true',
@@ -67,7 +69,7 @@ let promptOffset = 0,
     idCount = 0,
     answerWordArray = [];
 
-let specialKeys = ["Pause", "ScrollLock", "Insert", "PageUp", "PageDown", "Delete", "End", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Escape", "Tab", "CapsLock", "Control", "Alt", "ContextMenu", "Home", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown", "NumLock", "Backspace", "Shift", " ", "Enter", "OS" ], // list of all keys we typically want to ignore
+let specialKeys = ["Pause", "ScrollLock", "Insert", "PageUp", "PageDown", "Delete", "End", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Escape", "Tab", "CapsLock", "Control", "Alt", "AltGraph", "ContextMenu", "Home", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown", "NumLock", "Backspace", "Shift", " ", "Enter", "OS" ], // list of all keys we typically want to ignore
     punctuation = localStorage.getItem('punctuation') || '', // this contains punctuation to include in our test sets. Set to empty at first
     requiredLetters = '', //levelDictionaries[currentLayout]['lvl'+currentLevel]+punctuation;; // keeps track of letters that still need to be used in the current level
     initialCustomKeyboardState = '', // saves a temporary copy of a keyboard layout that a user can return to by discarding changes
@@ -76,6 +78,7 @@ let specialKeys = ["Pause", "ScrollLock", "Insert", "PageUp", "PageDown", "Delet
 // menu config containers
 let preferenceButton = document.querySelector('.settings'),
     capitalLettersAllowed = document.querySelector('.capitalLettersAllowed'),
+    nonLatinLettersAllowed = document.querySelector('.nonLatinLettersAllowed'),
     fullSentenceModeToggle = document.querySelector('.fullSentenceMode'),
     fullSentenceModeLevelButton = document.querySelector('.lvl8'),
     requireBackspaceCorrectionToggle = document.querySelector('.requireBackspaceCorrectionToggle'),
@@ -87,7 +90,8 @@ let preferenceButton = document.querySelector('.settings'),
     punctuationModeButton = document.querySelector('.punctuationModeButton'),
     showCheatsheetButton = document.querySelector('.showCheatsheetButton'),
     playSoundOnClickButton = document.querySelector('.playSoundOnClick'),
-    playSoundOnErrorButton = document.querySelector('.playSoundOnError');
+    playSoundOnErrorButton = document.querySelector('.playSoundOnError'),
+    wordListLanguageSelect = document.querySelector('.wordListLanguageSelect');
 
 start();
 init();
@@ -121,6 +125,7 @@ function start() {
     layout.setAttribute('data-value', currentLayout);
     //keyboard.value = currentKeyboard;
     keyboard.setAttribute('data-value', currentKeyboard);
+    wordListLanguageSelect.value = currentLanguage;
 
     navInit();
 
@@ -144,6 +149,12 @@ function navInit() {
         capitalLettersAllowed.classList.add('active');
     } else {
         capitalLettersAllowed.classList.remove('active');
+    }
+
+    if (!nonLatin === true) {
+        nonLatinLettersAllowed.classList.add('active');
+    } else {
+        nonLatinLettersAllowed.classList.remove('active');
     }
 
     if (punctuation !== "") {
@@ -314,6 +325,13 @@ capitalLettersAllowed.addEventListener('click', ()=> {
     reset();
 });
 
+// non-latin letters allowed
+nonLatinLettersAllowed.addEventListener('click', ()=> {
+    nonLatin = !nonLatin;
+    localStorage.setItem('nonLatin', nonLatin);
+    reset();
+});
+
 requireBackspaceCorrectionToggle.addEventListener('click', ()=> {
     requireBackspaceCorrection = !requireBackspaceCorrection;
     localStorage.setItem('requireBackspaceCorrection', requireBackspaceCorrection);
@@ -470,6 +488,15 @@ punctuationModeButton.addEventListener('click', ()=> {
 
     createTestSets();
     updateCheatsheetStyling(currentLevel);
+    reset();
+});
+
+// word list language selector
+wordListLanguageSelect.addEventListener('change', ()=> {
+    currentLanguage = wordListLanguageSelect.value;
+    localStorage.setItem('currentLanguage', currentLanguage);
+    
+    createTestSets();
     reset();
 });
 
@@ -1415,20 +1442,22 @@ function endGame() {
 function generateLine(maxWords) {
     let str = '';
 
+    let sentenceInCurrentLang = sentences[currentLanguage];
+
     if(fullSentenceMode) {
         // let rand = Math.floor(Math.random()*35);
         let rand = 0;
         if(sentenceStartIndex == -1) {
-            sentenceStartIndex = getPosition(sentence, '.', rand)+1;
-            sentenceEndIndex = sentence.substring(sentenceStartIndex + lineLength+2).indexOf(' ') + 
+            sentenceStartIndex = getPosition(sentenceInCurrentLang, '.', rand)+1;
+            sentenceEndIndex = sentenceInCurrentLang.substring(sentenceStartIndex + lineLength+2).indexOf(' ') + 
                                 sentenceStartIndex +lineLength+1;
-            str = sentence.substring(sentenceStartIndex, sentenceEndIndex+1);
+            str = sentenceInCurrentLang.substring(sentenceStartIndex, sentenceEndIndex+1);
         }else{
 
             sentenceStartIndex = sentenceEndIndex+1;
-            sentenceEndIndex = sentence.substring(sentenceStartIndex + lineLength+2).indexOf(' ') + 
+            sentenceEndIndex = sentenceInCurrentLang.substring(sentenceStartIndex + lineLength+2).indexOf(' ') + 
                                 sentenceStartIndex +lineLength+1;
-            str = sentence.substring(sentenceStartIndex, sentenceEndIndex+1);
+            str = sentenceInCurrentLang.substring(sentenceStartIndex, sentenceEndIndex+1);
             console.log(sentenceStartIndex);
             console.log(sentenceEndIndex);
         }
@@ -1478,7 +1507,9 @@ function generateLine(maxWords) {
             }else if(onlyLower && containsUpperCase(wordToAdd)) {
                 // if only lower case is allowed and the word to add contains an uppercase,
                 // throw out the word and try again
-                
+            }else if(nonLatin && containsNonLatinLetters(wordToAdd)) {
+                // if only latin letters are allowed and the word to add contains a non-latin letter,
+                // throw out the word and try again
             }else {
                 // if last word of the line, don't add a space
                 str += wordToAdd + ' ';
@@ -1563,6 +1594,19 @@ function containsUpperCase(word) {
     word.split('').forEach((letter)=> {
         if(upperCase.includes(letter)) {
             // console.log('upperCase ' + letter);
+            result = true;
+        }
+    });
+    return result;
+}
+
+// if 'word' contains a non-latin letter (any diacritics, special characters like ßœæ...), return true. Else return false
+function containsNonLatinLetters(word) {
+    let latinLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = false;
+    word.split('').forEach((letter)=> {
+        if(!latinLetters.includes(letter)) {
+            // console.log('non latin ' + letter);
             result = true;
         }
     });
@@ -1682,7 +1726,7 @@ function createTestSets(){
 
         wordLists[objKeys[i]] = [];
         //console.log('level ' +(i+1) + ': ' + wordLists[objKeys[i]]);
-        wordLists[objKeys[i]] = generateList(includedLetters, requiredLetters);
+        wordLists[objKeys[i]] = generateList(includedLetters, requiredLetters, currentLanguage);
         // if(i == 6) console.log('level ' +(i+1) + ': ' + wordLists[objKeys[i]]);
     }
 }

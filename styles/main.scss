@@ -835,7 +835,7 @@ main {
 }
 
 select {
-    width: 8vmax;
+    width: fit-content;
     color: var(--text-color);
     background-color: var(--background);
 }

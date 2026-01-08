@@ -56,10 +56,8 @@ function buildStatsTable(stats) {
     let html = '<table class="stats-table">';
     html += '<thead><tr>';
     html += '<th>Date</th>';
-    html += '<th>Type</th>';
-    html += '<th>Mode</th>';
+    html += '<th>Type/Mode</th>';
     html += '<th>Level</th>';
-    html += '<th>Lang</th>';
     html += '<th>Words</th>';
     html += '<th>WPM</th>';
     html += '<th>Acc</th>';
@@ -88,20 +86,13 @@ function buildStatsTable(stats) {
         const typeBadge = stat.gameType === 'sentence' ? 
             '<span class="badge badge-sentence" data-tippy-content="Sentence">S</span>' : 
             '<span class="badge badge-words" data-tippy-content="Words">W</span>';
-        html += `<td>${typeBadge}</td>`;
-        
-        // Mode with tooltip
         const modeBadge = stat.gameMode === 'time-based' ? 
             '<span class="badge badge-time" data-tippy-content="Time-based">T</span>' : 
             '<span class="badge badge-word" data-tippy-content="Word-based">W</span>';
-        html += `<td>${modeBadge}</td>`;
-        
+        html += `<td>${typeBadge} ${modeBadge}</td>`;
+            
         // Level
         html += `<td>${stat.settings.level}</td>`;
-        
-        // Language
-        const language = stat.settings.language || 'en';
-        html += `<td>${language}</td>`;
         
         // Words
         const words = stat.performance.words || stat.performance.wordsTyped || 0;
@@ -129,10 +120,13 @@ function buildStatsTable(stats) {
         html += `<tr class="extended-info" id="extended-${index}" style="display: none;">`;
         html += `<td colspan="9">`;
         html += `<div class="extended-content">`;
-        html += `<strong>Layout:</strong> ${capitalize(stat.settings.layout)}<br>`;
+        html += `<strong>Layout:</strong> ${(stat.settings.layout)}<br>`;
         html += `<strong>Keyboard:</strong> ${capitalize(stat.settings.keyboard)}<br>`;
         if (stat.settings.keyRemapping !== undefined) {
             html += `<strong>Key remapping:</strong> ${stat.settings.keyRemapping ? 'Yes' : 'No'}<br>`;
+        }
+        if (stat.settings.language !== undefined) {`x`
+            html += `<strong>Language:</strong> ${stat.settings.language}<br>`;
         }
         if (stat.settings.capitalLettersAllowed !== undefined) {
             html += `<strong>Capital letters:</strong> ${stat.settings.capitalLettersAllowed ? 'Yes' : 'No'}<br>`;

@@ -1468,7 +1468,24 @@ function endGame() {
     wpmText.innerHTML = 'WPM: ' + wpm;
     // make accuracy visible
     testResults.classList.toggle('transparent');
+    // set correct and errors counts to 0
+    correct = 0;
+    errors = 0;
 
+    // change focus to resetButton
+    resetButton.focus();
+
+
+    // update scoreText
+    updateScoreText();
+    // clear input field
+    // document.querySelector('#userInput').value = '';
+    input.value = '';
+    fakeInput.innerText = '';
+    // set letter index (where in the word the user currently is)
+    // to the beginning of the word
+    letterIndex = 0;
+   
     // Save stats to localStorage
     if (typeof StatsManager !== 'undefined') {
         const gameData = {
@@ -1505,23 +1522,6 @@ function endGame() {
         }
     }
 
-    // set correct and errors counts to 0
-    correct = 0;
-    errors = 0;
-
-    // change focus to resetButton
-    resetButton.focus();
-
-
-    // update scoreText
-    updateScoreText();
-    // clear input field
-    // document.querySelector('#userInput').value = '';
-    input.value = '';
-    fakeInput.innerText = '';
-    // set letter index (where in the word the user currently is)
-    // to the beginning of the word
-    letterIndex = 0;
 }
 
 // generates a single line to be appended to the answer array

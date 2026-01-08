@@ -77,6 +77,7 @@ let specialKeys = ["Pause", "ScrollLock", "Insert", "PageUp", "PageDown", "Delet
 
 // menu config containers
 let preferenceButton = document.querySelector('.settings'),
+    statsToggleButton = document.querySelector('.stats-toggle'),
     capitalLettersAllowed = document.querySelector('.capitalLettersAllowed'),
     nonLatinLettersAllowed = document.querySelector('.nonLatinLettersAllowed'),
     fullSentenceModeToggle = document.querySelector('.fullSentenceMode'),
@@ -300,6 +301,7 @@ document.addEventListener('keydown', (e)=> {
     // if(e.keyCode == 27) {
     if (e.key === "Escape") {
         closeMenu();
+        closeStatsPanel();
 
         // close custom ui menu
         if (customInput.classList.contains('show')) {
@@ -316,6 +318,51 @@ document.addEventListener('keydown', (e)=> {
 preferenceButton.addEventListener('click', ()=> {
     //openMenu();
     toggleMenu();
+});
+
+// Stats panel functions
+function openStatsPanel() {
+    let content = document.querySelector('content'),
+        statsbar = document.querySelector('statsbar'),
+        statsBtn = document.querySelector('.stats-toggle');
+
+    statsbar.classList.remove('dispose');
+    statsBtn.classList.add('active');
+    setTimeout(function() {
+        content.classList.remove('hidestats');
+    }, 10);
+    
+    // Load stats when opening
+    if (typeof loadStatsInPanel === 'function') {
+        loadStatsInPanel();
+    }
+}
+
+function closeStatsPanel() {
+    let content = document.querySelector('content'),
+        statsbar = document.querySelector('statsbar'),
+        statsBtn = document.querySelector('.stats-toggle');
+
+    content.classList.add('hidestats');
+    setTimeout(function() {
+        statsbar.classList.add('dispose');
+        statsBtn.classList.remove('active');
+    }, 100);
+}
+
+function toggleStatsPanel() {
+    let content = document.querySelector('content');
+
+    if (content.classList.contains('hidestats')) {
+        openStatsPanel();
+    } else {
+        closeStatsPanel();
+    }
+}
+
+// listener for stats toggle button
+statsToggleButton.addEventListener('click', ()=> {
+    toggleStatsPanel();
 });
 
 // capital letters allowed
@@ -1407,17 +1454,20 @@ function endGame() {
 
     // calculate wpm
     let wpm;
+    let totalTime;
     if(!timeLimitMode) {
+        totalTime = minutes * 60 + seconds;
         wpm = (((correct+errors)/5)/(minutes+(seconds/60))).toFixed(2);
     } else {
+        totalTime = timeLimitModeInput.value;
         wpm = (((correct+errors)/5)/(timeLimitModeInput.value/60)).toFixed(2);
     }
     // set accuracyText
-    accuracyText.innerHTML='Accuracy: ' + ((100*correct)/(correct+errors)).toFixed(2) + '%';
+    let accuracy = ((100*correct)/(correct+errors)).toFixed(2);
+    accuracyText.innerHTML='Accuracy: ' + accuracy + '%';
     wpmText.innerHTML = 'WPM: ' + wpm;
     // make accuracy visible
     testResults.classList.toggle('transparent');
-
     // set correct and errors counts to 0
     correct = 0;
     errors = 0;
@@ -1435,6 +1485,43 @@ function endGame() {
     // set letter index (where in the word the user currently is)
     // to the beginning of the word
     letterIndex = 0;
+   
+    // Save stats to localStorage
+    if (typeof StatsManager !== 'undefined') {
+        const gameData = {
+            fullSentenceMode: fullSentenceModeEnabled,
+            timeLimitMode: timeLimitMode,
+            level: currentLevel,
+            layout: currentLayout,
+            keyboard: currentKeyboard,
+            language: currentLanguage,
+            onlyLower: onlyLower,
+            nonLatin: nonLatin,
+            punctuation: punctuation,
+            requireBackspaceCorrection: requireBackspaceCorrection,
+            wordScrollingMode: wordScrollingMode,
+            showCheatsheet: showCheatsheet,
+            playSoundOnClick: playSoundOnClick,
+            playSoundOnError: playSoundOnError,
+            keyRemapping: localStorage.getItem('keyRemapping') === 'true',
+            wpm: wpm,
+            accuracy: accuracy,
+            time: totalTime,
+            wordsTyped: score,
+            correctKeystrokes: correct,
+            errors: errors
+        };
+        StatsManager.saveGameStats(StatsManager.createStatsObject(gameData));
+        
+        // Update stats display if panel is open
+        if (typeof loadStatsInPanel !== 'undefined') {
+            const content = document.querySelector('content');
+            if (content && !content.classList.contains('hidestats')) {
+                loadStatsInPanel();
+            }
+        }
+    }
+
 }
 
 // generates a single line to be appended to the answer array

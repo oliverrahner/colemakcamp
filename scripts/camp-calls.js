@@ -132,6 +132,16 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Stats panel close button
+document.addEventListener('click', function(event) {
+    let target = event.target,
+        closeStats = document.querySelector('.close-stats');
+    
+    if (closeStats && (target == closeStats || closeStats.contains(target))) {
+        closeStatsPanel();
+    }
+});
+
 // Setting word or time limit
 document.addEventListener('click', function(event) {
     let target = event.target,

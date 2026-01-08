@@ -90,5 +90,6 @@ Some of the icons have been taken from Flaticon, which requires attribution. Bel
 | fa-send         | [Flaticon](https://www.flaticon.com/free-icon/message_10426368)                    |
 | fa-edit         | [Flaticon](https://www.flaticon.com/free-icon/edit_10074336)                       |
 | fa-keyboard     | [Flaticon](https://www.flaticon.com/free-icon/keyboard_4122844)                    |
+| fa-chart        | [Flaticon](https://www.flaticon.com/free-icon/bar-graph_2214523)                   |
 
 Icons not listed here are either from Material Icons, or created from scratch.

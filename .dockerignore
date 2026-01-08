@@ -1,0 +1,28 @@
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+LICENSE
+
+# Build tools and development files
+tools/
+package.json
+package-lock.json
+node_modules/
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -78,6 +78,9 @@
 .fa.fa-preferences::before {
   content: "\e00e";
 }
+.fa.fa-chart::before {
+  content: "\e016";
+}
 .fa.fa-tick::before {
   content: "\e00f";
 }
@@ -102,4 +105,4 @@
 }
 .active .fa.fa-circle::before {
   content: "\e011";
-}/*# sourceMappingURL=fontasm.css.map */
+}

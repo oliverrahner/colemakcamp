@@ -53,7 +53,7 @@
   background: var(--accent-half);
 }
 
-header, footer, sidebar, menubar {
+header, footer, sidebar, menubar, statsbar {
   -webkit-touch-callout: none;
   user-select: none;
 }
@@ -138,9 +138,9 @@ content {
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: 9.5rem var(--_menubarwidth) 1fr;
+  grid-template-columns: 9.5rem var(--_menubarwidth) var(--_statsbarwidth) 1fr;
   grid-template-rows: 7.5rem 1fr 4.5rem;
-  grid-template-areas: "sidebar menubar header" "sidebar menubar content" "sidebar menubar footer";
+  grid-template-areas: "sidebar menubar statsbar header" "sidebar menubar statsbar content" "sidebar menubar statsbar footer";
   position: relative;
 }
 content:not(.hidemenu) {
@@ -155,9 +155,21 @@ content.hidemenu {
 content.hidemenu menubar {
   box-shadow: 0;
 }
+content:not(.hidestats) {
+  --_statsbarwidth: 42rem;
+}
+content:not(.hidestats) statsbar {
+  box-shadow: 0 0 0.9rem 0.4rem var(--nav-shadow);
+}
+content.hidestats {
+  --_statsbarwidth: 0;
+}
+content.hidestats statsbar {
+  box-shadow: 0;
+}
 @media screen and (max-height: 620px) and (orientation: landscape) {
   content {
-    grid-template-columns: 19rem var(--_menubarwidth) 1fr;
+    grid-template-columns: 19rem var(--_menubarwidth) var(--_statsbarwidth) 1fr;
   }
 }
 content sidebar {
@@ -170,6 +182,10 @@ content menubar {
   /* grid-column: 2/3;
   grid-row: 1/4; */
   grid-area: menubar;
+  z-index: 1;
+}
+content statsbar {
+  grid-area: statsbar;
   z-index: 1;
 }
 content header {
@@ -749,6 +765,251 @@ menubar mbody .appearance li .fa-day:hover, menubar mbody .appearance li .fa-nig
 }
 menubar mbody .appearance .grow, menubar mbody .appearance li > span:first-child {
   flex-grow: 1;
+}
+
+statsbar {
+  display: flex;
+  width: var(--_statsbarwidth);
+  background: var(--menubar-bg);
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+statsbar.dispose {
+  display: none;
+}
+statsbar scontent {
+  --_padding: 2rem;
+  position: absolute;
+  height: 100%;
+  width: 42rem;
+  padding: var(--_padding);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--_padding);
+}
+statsbar scontent shead {
+  display: flex;
+  width: 100%;
+}
+statsbar scontent shead ul.stats-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  font-size: 1.8rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+statsbar scontent shead ul.stats-nav .fa {
+  line-height: 1;
+}
+statsbar scontent shead ul.stats-nav li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.4rem;
+  width: 3.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  cursor: pointer;
+}
+statsbar scontent shead ul.stats-nav li.close-stats:hover {
+  transform: scale(1.2);
+  color: var(--text-stark);
+  background: var(--menubar-fg);
+}
+statsbar scontent shead ul.stats-nav li.close-stats:active {
+  transform: scale(0.9);
+}
+statsbar scontent sbody {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--menubar-bg);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--_padding) / 2);
+  overflow-y: auto;
+}
+statsbar scontent sbody ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+statsbar scontent sbody stitle {
+  display: flex;
+  align-items: center;
+  padding: calc(var(--_padding) / 2);
+  gap: calc(var(--_padding) / 2);
+  border-radius: 0.9rem;
+  color: var(--accent-half);
+  border: 1px solid var(--menubar-fg);
+}
+statsbar scontent sbody .stats-legend {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--_padding) / 4);
+  padding: calc(var(--_padding) / 2);
+  background: var(--menubar-fg);
+  border-radius: 0.9rem;
+  font-size: 1.3rem;
+  color: var(--text-color);
+}
+statsbar scontent sbody .stats-actions .btn {
+  width: 100%;
+  padding: calc(var(--_padding) / 2);
+  background: var(--accent-half);
+  color: var(--background);
+  border: none;
+  border-radius: 0.9rem;
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+statsbar scontent sbody .stats-actions .btn:hover {
+  opacity: 0.8;
+}
+statsbar scontent sbody .stats-actions .btn.btn-danger {
+  background: var(--red);
+}
+statsbar scontent sbody hr {
+  height: 1px;
+  width: 100%;
+  background: var(--menubar-fg);
+  margin: 0;
+  border: 0;
+}
+statsbar scontent sbody .stats-filters {
+  display: flex;
+  gap: calc(var(--_padding) / 4);
+  flex-wrap: wrap;
+}
+statsbar scontent sbody .stats-filters .filter-btn {
+  flex: 1;
+  min-width: 0;
+  padding: calc(var(--_padding) / 4) calc(var(--_padding) / 2);
+  background: var(--menubar-fg);
+  border: 1px solid var(--menubar-fg);
+  border-radius: 0.9rem;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 1.3rem;
+}
+statsbar scontent sbody .stats-filters .filter-btn:hover {
+  background: var(--foreground);
+}
+statsbar scontent sbody .stats-filters .filter-btn.active {
+  background: var(--accent-half);
+  color: var(--background);
+  border-color: var(--accent-half);
+}
+statsbar scontent sbody .badge {
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+statsbar scontent sbody .badge.badge-sentence {
+  background: #17a2b8;
+  color: white;
+}
+statsbar scontent sbody .badge.badge-words {
+  background: #28a745;
+  color: white;
+}
+statsbar scontent sbody .badge.badge-time {
+  background: #ffc107;
+  color: black;
+}
+statsbar scontent sbody .badge.badge-word {
+  background: #6f42c1;
+  color: white;
+}
+statsbar scontent sbody #statsContent {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+statsbar scontent sbody #statsContent .no-stats {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-color);
+  opacity: 0.6;
+}
+statsbar scontent sbody #statsContent .no-stats p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+statsbar scontent sbody #statsContent .stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.3rem;
+}
+statsbar scontent sbody #statsContent .stats-table thead {
+  background: var(--menubar-fg);
+  position: sticky;
+  top: 0;
+}
+statsbar scontent sbody #statsContent .stats-table thead th {
+  padding: calc(var(--_padding) / 3);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+statsbar scontent sbody #statsContent .stats-table tbody tr {
+  border-bottom: 1px solid var(--menubar-fg);
+}
+statsbar scontent sbody #statsContent .stats-table tbody tr:hover {
+  background: var(--menubar-fg);
+}
+statsbar scontent sbody #statsContent .stats-table tbody td {
+  padding: calc(var(--_padding) / 3);
+}
+statsbar scontent sbody #statsContent .stats-table .wpm-good {
+  color: var(--green);
+  font-weight: 600;
+}
+statsbar scontent sbody #statsContent .stats-table .wpm-medium {
+  color: var(--orange);
+  font-weight: 600;
+}
+statsbar scontent sbody #statsContent .stats-table .wpm-low {
+  color: var(--red);
+  font-weight: 600;
+}
+statsbar scontent sbody #statsContent .stats-table .accuracy-high {
+  color: var(--green);
+}
+statsbar scontent sbody #statsContent .stats-table .accuracy-medium {
+  color: var(--orange);
+}
+statsbar scontent sbody #statsContent .stats-table .accuracy-low {
+  color: var(--red);
+}
+statsbar scontent sbody #statsContent .expand-btn {
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.4rem;
+  color: var(--text-color);
+}
+statsbar scontent sbody #statsContent .expand-btn:hover {
+  color: var(--accent-half);
+}
+statsbar scontent sbody #statsContent .extended-info td {
+  background: var(--foreground);
+  padding: calc(var(--_padding) / 2);
+}
+statsbar scontent sbody #statsContent .extended-info .extended-content {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+statsbar scontent sbody #statsContent .extended-info .extended-content strong {
+  color: var(--text-stark);
 }
 
 footer {

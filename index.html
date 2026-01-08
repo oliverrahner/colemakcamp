@@ -85,7 +85,7 @@
       </card>
       <backdrop></backdrop>
    </curtain>
-   <content class="hidemenu">
+   <content class="hidemenu hidestats">
       <header class="contain">
          <left>
             <i class="fa fa-logo"></i>
@@ -202,6 +202,9 @@
                <span class="theme-night">
                   <i class="fa fa-night"></i>
                </span>
+            </li>
+            <li class="stats-toggle" data-tippy-content="View Statistics" data-tippy-placement="right">
+               <i class="fa fa-chart"></i>
             </li>
             <li class="settings" data-tippy-content="Toggle Menu" data-tippy-placement="right">
                <i class="fa fa-settings"></i>
@@ -361,6 +364,45 @@
             </mbody>
          </mcontent>
       </menubar>
+      <statsbar class="dispose">
+         <scontent>
+            <shead>
+
+               <ul class="stats-nav">
+                  <span class="grow"></span>
+                  <li class="close-stats" data-tippy-content="Close" data-tippy-placement="bottom-end"><i class="fa fa-close"></i></li>
+               </ul>
+            </shead>
+            <sbody>
+               <stitle>
+                  <i class="fa fa-chart"></i>
+                  <span>Statistics</span>
+               </stitle>
+               <hr>
+               <div class="stats-legend">
+                  <div><strong>Legend:</strong></div>
+                  <div>Type: <span class="badge badge-words">W</span>ords / <span class="badge badge-sentence">S</span>entences</div>
+                  <div>Mode: <span class="badge badge-word">W</span>ords / <span class="badge badge-time">T</span>ime</div>
+               </div>
+               <div class="stats-actions">
+                  <button id="clearStats" class="btn btn-danger">Clear All Stats</button>
+               </div>
+               <hr>
+               <div class="stats-filters">
+                  <button class="filter-btn active" data-filter="all">All</button>
+                  <button class="filter-btn" data-filter="words">Words</button>
+                  <button class="filter-btn" data-filter="sentence">Sentences</button>
+                  <button class="filter-btn" data-filter="time-based">Time</button>
+                  <button class="filter-btn" data-filter="word-based">Word</button>
+               </div>
+               <div id="statsContent">
+                  <div class="no-stats">
+                     <p>No statistics available yet.<br>Complete a game to see your stats here!</p>
+                  </div>
+               </div>
+            </sbody>
+         </scontent>
+      </statsbar>
       <main class="contain">
          <section id="main">
             <div class="typingArea">
@@ -408,6 +450,8 @@
    <script type="text/javascript" src="scripts/layout-info.min.js"></script>
    <script type="text/javascript" src="scripts/word-list.min.js"></script>
    <script type="text/javascript" src="scripts/keyboard-divs.min.js"></script>
+   <script type="text/javascript" src="scripts/stats.min.js"></script>
+   <script type="text/javascript" src="scripts/stats-display.min.js"></script>
    <script type="text/javascript" src="scripts/app.min.js"></script>
    <script type="text/javascript" src="scripts/new-key.min.js"></script>
    <script type="text/javascript" src="scripts/camp-calls.min.js"></script>

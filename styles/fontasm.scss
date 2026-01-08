@@ -82,6 +82,9 @@ $version: 20240009035428;
     &.fa-preferences::before {
         content: '\E00E';
     }
+    &.fa-chart::before {
+        content: '\E016';
+    }
     &.fa-tick::before {
         content: '\E00F';
     }

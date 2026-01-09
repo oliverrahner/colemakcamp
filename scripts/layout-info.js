@@ -109,6 +109,9 @@ let levelDictionaries = {
         'lvl6': 'qzxm',
         'lvl7': alphabet,
     },
+    noted: {
+        "lvl1":"iezyuaqpbmlovwg,.csjftnrhdxk","lvl2":"","lvl3":"","lvl4":"","lvl5":"","lvl6":"","lvl7":"bgopqwyzuamlieiezyuaqpbmlcsodvvwg,.kfcsjftnrhdxk"
+    },
     custom: {
         'lvl1': '',
         'lvl2': '',

@@ -715,6 +715,9 @@ let layoutMaps = {
         'Slash': '/',
         'shiftLayer': 'default',
     },
+    noted: {
+        "Minus":" ","Equal":" ","KeyQ":"z","KeyW":"y","KeyE":"u","KeyR":"a","KeyT":"q","KeyY":"p","KeyU":"b","KeyI":"m","KeyO":"l","KeyP":"f","BracketLeft":"j","BracketRight":"ß","Backslash":" ","KeyA":"c","KeyS":"s","KeyD":"i","KeyF":"e","KeyG":"o","KeyH":"d","KeyJ":"t","KeyK":"n","KeyL":"r","Semicolon":"h","Quote":" ","KeyZ":"v","KeyX":"x","KeyC":"ü","KeyV":"ä","KeyB":"ö","KeyN":"w","KeyM":"g","Comma":",","Period":".","Slash":"k","shiftLayer":"default"
+    },
     custom: {
         'Minus': " ",
         'Equal': " ",
